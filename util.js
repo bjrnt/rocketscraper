@@ -1,5 +1,3 @@
-import jsonfile from 'jsonfile';
-
 export function timeout(duration = 0) {
   return new Promise((resolve, reject) => {
     setTimeout(resolve, duration);
@@ -10,24 +8,6 @@ export function timeout(duration = 0) {
 const urlExtractor = new RegExp('/([0-9]+/[^/]+)$');
 export function pfUrl(url) {
   return decodeURIComponent(urlExtractor.exec(url)[0]);
-}
-
-export function saveListings(filePath, listings) {
-  return new Promise((resolve, reject) => {
-    jsonfile.writeFile(filePath, listings, function(err) {
-      if(err) reject(err);
-      else resolve();
-    });
-  });
-}
-
-export function loadListings(filePath) {
-  return new Promise((resolve, reject) => {
-    jsonfile.readFile(filePath, function(err, obj) {
-      if(err) reject(err);
-      else resolve(new Map(obj));
-    });
-  });
 }
 
 /*
