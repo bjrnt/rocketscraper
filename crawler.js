@@ -1,21 +1,16 @@
 import * as Scraping from './scraping';
 import {timeout, pfUrl, loadListings, saveListings} from './util';
 import _ from 'lodash';
+import Storage from './storage';
 
-const keyPrefix = 'rp.listing.';
 const listingPageUrl = 'https://www.rocketpunch.com/jobs?page=';
 
-var listings = new Map();
-
-loadListings('listings.json').then((map) => {
-  listings = map;
-});
-
 async function processListingUrl(url) {
-  if(!listings.has(url)) {
+  let exists = await store.urlExists(url);
+  if(!exists) {
     console.log('Saving listing for', pfUrl(url));
     let listing = await Scraping.getListingContent(url);
-    listings.set(url, listing);
+    await store.savePost(listing);
     console.log('Processing done for', pfUrl(url));
     return listing;
   } else {
@@ -44,11 +39,11 @@ async function crawlListingPageRange(start, end) {
   }
 }
 
-crawlListingPageRange(1, 10).then(() => {
-  console.log('Done!');
-  let listingArray = [...listings];
-  console.log(listingArray);
-  return saveListings('listings.json', listingArray);
-}).catch((err) => {
-  console.error('Error:', err);
+let store = new Storage('listings');
+store.ready().then(() => {
+  crawlListingPageRange(1, 10).then(() => {
+    console.log('Done!');
+  }).catch((err) => {
+    console.error('Error:', err);
+  });
 });

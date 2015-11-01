@@ -34,7 +34,7 @@ export async function getListingContent(url) {
   let posting = {
     title: $('section.section.summary h2.title').text().trim(),
     company: $('section.section.summary p.company a').text().trim(),
-    role: $('section.section.summary dl.dl-info.dl-role dd.dd.nowrap').text().trim(),
+    role: $('section.section.summary dl.dl-info.dl-role dd.dd.nowrap').first().text().trim(),
     experience: $('section.section.summary dl.dl-info.dl-role dd.dd.nowrap.text-comma').text().trim(),
     salary: $('section.section.summary dd.dd.nowrap.salary').text().trim(),
     location: $('section.section.summary dd.dd.nowrap.remote').text().trim(),
@@ -43,7 +43,8 @@ export async function getListingContent(url) {
     statement: $('section#section_statement div.panel-body').text().trim(),
     benefits: benefits,
     introduction: $('section#section_introduction div.panel-body').text().trim(),
-    url: url
+    url: url,
+    timestamp: new Date()
   };
 
   return posting;
@@ -58,10 +59,7 @@ export async function getListingContents(jobListingsPage) {
   return await* summaries;
 }
 
-/*getListingContent('https://www.rocketpunch.com/jobs/1748/%EA%B0%9C%EB%B0%9C%EC%9E%90')
-.then(function(summary) {
-  console.log(summary);
-});
-
-setTimeout(function() {}, 5000);
-*/
+// getListingContent('https://www.rocketpunch.com/jobs/1748/%EA%B0%9C%EB%B0%9C%EC%9E%90')
+// .then(function(summary) {
+  // console.log(summary);
+// });
